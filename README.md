@@ -58,6 +58,16 @@ dsh plugin --profile desktop add "file:D:/path/to/dsh-whale-reasoning"
 
 最后完全退出并重新打开 DSH Desktop。
 
+### 方式三：从 GitHub 安装
+
+仓库地址：<https://github.com/ElianKade/dsh-whale-reasoning>（当前为私有仓库，需要先获得访问权限）。
+
+```powershell
+dsh plugin --profile desktop add "github:ElianKade/dsh-whale-reasoning"
+```
+
+安装完成后同样需要完全退出并重新打开 DSH Desktop。
+
 ### 为什么不需要改绝对路径
 
 `cordis.patch.yml` 中的 Host 入口使用 **包内相对路径**：
