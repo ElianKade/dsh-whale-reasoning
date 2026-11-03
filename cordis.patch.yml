@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-whale-reasoning
+      name: './index.js'

@@ -1,0 +1,2632 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>鲸鲸推理 · DeepSeek Harness 插件预览</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --pv-bg: #05070f;
+      --pv-bg-2: #080d1a;
+      --pv-text: #f3f6ff;
+      --pv-text-soft: #c5cfe8;
+      --pv-muted: #8d9abb;
+      --pv-line: rgba(138, 158, 220, 0.16);
+      --pv-line-strong: rgba(140, 164, 255, 0.28);
+      --pv-panel: rgba(14, 20, 37, 0.78);
+      --pv-panel-solid: #101729;
+      --pv-input: rgba(7, 11, 23, 0.72);
+      --pv-bubble: rgba(18, 26, 47, 0.9);
+      --pv-chip: rgba(120, 145, 255, 0.08);
+      --pv-accent: #6d8aff;
+      --pv-accent-2: #9a7bff;
+      --pv-accent-3: #49b7ff;
+      --pv-glow-a: rgba(72, 100, 255, 0.16);
+      --pv-glow-b: rgba(125, 78, 255, 0.13);
+      --pv-shadow: 0 34px 90px rgba(0, 0, 0, 0.55);
+      --pv-grid: rgba(130, 155, 230, 0.16);
+      --dsw-alias-label-primary: #f4f7ff;
+      --dsw-alias-label-secondary: #aeb9d8;
+      --dsw-alias-label-tertiary: #8793b5;
+      --dsw-alias-label-caption: #7f8bad;
+      --dsw-alias-label-dimmed: #5e6987;
+      --dsw-alias-interactive-bg-hover: rgba(122, 145, 255, 0.13);
+      --dsw-alias-border-l1: rgba(142, 162, 220, 0.18);
+      --dsw-specific-menu: #171c2c;
+      --dsw-alias-bg-overlay: #171c2c;
+      --dsw-elevation-prominent: 0 26px 70px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.35);
+      --dsw-menu-backdrop-filter: blur(24px) saturate(1.3);
+      --dsw-radius-sm: 8px;
+      --dsw-focus-ring-color: #8293ff;
+      --dsw-alias-state-business-primary: #6d8aff;
+      --dsw-alias-state-error-primary: #ff8f8f;
+      --dsw-alias-brand-primary: #6d8aff;
+      --dsw-alias-scrollbar-bg-l2: rgba(150, 165, 220, 0.28);
+    }
+
+    html[data-theme="light"] {
+      color-scheme: light;
+      --pv-bg: #edf1fb;
+      --pv-bg-2: #f8faff;
+      --pv-text: #101a35;
+      --pv-text-soft: #3d4a6c;
+      --pv-muted: #687695;
+      --pv-line: rgba(45, 65, 120, 0.12);
+      --pv-line-strong: rgba(76, 105, 220, 0.24);
+      --pv-panel: rgba(255, 255, 255, 0.78);
+      --pv-panel-solid: #ffffff;
+      --pv-input: rgba(255, 255, 255, 0.82);
+      --pv-bubble: rgba(255, 255, 255, 0.9);
+      --pv-chip: rgba(79, 105, 220, 0.06);
+      --pv-glow-a: rgba(72, 100, 255, 0.1);
+      --pv-glow-b: rgba(125, 78, 255, 0.08);
+      --pv-shadow: 0 34px 80px rgba(51, 69, 130, 0.16);
+      --pv-grid: rgba(74, 100, 180, 0.12);
+      --dsw-alias-label-primary: #111a33;
+      --dsw-alias-label-secondary: #435071;
+      --dsw-alias-label-tertiary: #5d6b8e;
+      --dsw-alias-label-caption: #6f7c9c;
+      --dsw-alias-label-dimmed: #a2acc5;
+      --dsw-alias-interactive-bg-hover: rgba(60, 80, 180, 0.08);
+      --dsw-alias-border-l1: rgba(55, 75, 130, 0.16);
+      --dsw-specific-menu: rgba(255, 255, 255, 0.97);
+      --dsw-alias-bg-overlay: #ffffff;
+      --dsw-elevation-prominent: 0 26px 70px rgba(40, 55, 110, 0.18), 0 2px 10px rgba(40, 55, 110, 0.08);
+      --dsw-menu-backdrop-filter: blur(24px) saturate(1.1);
+      --dsw-focus-ring-color: #4e6cff;
+      --dsw-alias-state-business-primary: #4e6cff;
+      --dsw-alias-brand-primary: #4e6cff;
+      --dsw-alias-scrollbar-bg-l2: rgba(65, 85, 150, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--pv-bg);
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(920px 640px at 14% 12%, var(--pv-glow-a), transparent 66%),
+        radial-gradient(780px 580px at 88% 82%, var(--pv-glow-b), transparent 66%),
+        linear-gradient(180deg, var(--pv-bg), var(--pv-bg-2));
+      color: var(--pv-text);
+      font-family: "Segoe UI Variable Display", "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(var(--pv-grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(circle at 50% 40%, #000 0%, transparent 72%);
+      opacity: 0.5;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    ::selection {
+      background: rgba(110, 135, 255, 0.3);
+    }
+
+    .pv-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1240px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 22px 0 0;
+    }
+
+    .pv-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .pv-logo {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      flex: none;
+      border: 1px solid rgba(120, 150, 255, 0.25);
+      border-radius: 11px;
+      background: linear-gradient(145deg, #172447, #0c1328);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 22px rgba(30, 60, 180, 0.18);
+      color: #6d8aff;
+    }
+
+    .pv-logo svg {
+      width: 22px;
+      height: 16px;
+    }
+
+    .pv-brandText {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .pv-brandText strong {
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+
+    .pv-brandText span {
+      overflow: hidden;
+      color: var(--pv-muted);
+      font-size: 10px;
+      letter-spacing: 0.09em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .pv-headerRight {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: none;
+    }
+
+    .pv-previewBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--pv-line);
+      border-radius: 999px;
+      background: var(--pv-chip);
+      color: var(--pv-text-soft);
+      font-size: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .pv-previewBadge::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #7a91ff;
+      box-shadow: 0 0 8px rgba(122, 145, 255, 0.8);
+    }
+
+    .pv-themeBtn {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 1px solid var(--pv-line);
+      border-radius: 10px;
+      background: var(--pv-chip);
+      color: var(--pv-text-soft);
+      cursor: pointer;
+      outline: none;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .pv-themeBtn:hover {
+      background: var(--pv-line);
+      border-color: var(--pv-line-strong);
+    }
+
+    .pv-themeBtn:focus-visible {
+      box-shadow: 0 0 0 2px var(--dsw-focus-ring-color);
+    }
+
+    .pv-themeBtn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .pv-themeBtn .pv-sun {
+      display: none;
+    }
+
+    html[data-theme="dark"] .pv-themeBtn .pv-sun {
+      display: block;
+    }
+
+    html[data-theme="dark"] .pv-themeBtn .pv-moon {
+      display: none;
+    }
+
+    .pv-main {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: clamp(26px, 5vw, 72px);
+      align-items: center;
+      width: min(1240px, calc(100% - 48px));
+      min-height: calc(100vh - 170px);
+      margin: 0 auto;
+      padding: 58px 0 78px;
+    }
+
+    .pv-hero {
+      max-width: 500px;
+      padding-bottom: 18px;
+    }
+
+    .pv-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 19px;
+      color: #8ea5ff;
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .pv-eyebrow::before {
+      content: "";
+      width: 23px;
+      height: 1px;
+      background: linear-gradient(90deg, #6d8aff, transparent);
+    }
+
+    .pv-hero h1 {
+      margin: 0;
+      color: var(--pv-text);
+      font-size: clamp(38px, 4.4vw, 62px);
+      font-weight: 560;
+      letter-spacing: -0.045em;
+      line-height: 1.07;
+    }
+
+    .pv-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(103deg, #6c8cff 4%, #92a9ff 45%, #b79dff 96%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .pv-hero p {
+      max-width: 450px;
+      margin: 23px 0 0;
+      color: var(--pv-muted);
+      font-size: 13px;
+      letter-spacing: 0.005em;
+      line-height: 1.9;
+    }
+
+    .pv-hero p b {
+      color: var(--pv-text-soft);
+      font-weight: 560;
+    }
+
+    .pv-facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .pv-fact {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 8px 11px;
+      border: 1px solid var(--pv-line);
+      border-radius: 9px;
+      background: var(--pv-chip);
+      color: var(--pv-muted);
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    .pv-fact b {
+      color: #9eb1ff;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .pv-stage {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      justify-self: end;
+    }
+
+    .pv-stage::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -38px -30px -46px;
+      border-radius: 48%;
+      background:
+        radial-gradient(closest-side, rgba(74, 100, 255, 0.16), transparent 72%),
+        radial-gradient(closest-side at 70% 80%, rgba(140, 93, 255, 0.13), transparent 70%);
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    .pv-window {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 566px;
+      overflow: hidden;
+      border: 1px solid var(--pv-line-strong);
+      border-radius: 23px;
+      background: var(--pv-panel);
+      box-shadow: var(--pv-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(18px) saturate(1.2);
+    }
+
+    .pv-windowBar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 45px;
+      padding: 0 15px;
+      border-bottom: 1px solid var(--pv-line);
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .pv-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .pv-dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pv-line-strong);
+    }
+
+    .pv-windowTitle {
+      color: var(--pv-text-soft);
+      font-size: 10px;
+      font-weight: 560;
+      letter-spacing: 0.03em;
+    }
+
+    .pv-windowMode {
+      margin-left: auto;
+      color: var(--pv-muted);
+      font-size: 9px;
+      letter-spacing: 0.04em;
+    }
+
+    .pv-chat {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 14px;
+      padding: 24px 22px 16px;
+    }
+
+    .pv-userMsg {
+      align-self: flex-end;
+      max-width: 78%;
+      padding: 10px 13px;
+      border: 1px solid var(--pv-line);
+      border-radius: 13px 13px 4px 13px;
+      background: var(--pv-bubble);
+      color: var(--pv-text-soft);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .pv-aiMsg {
+      display: flex;
+      gap: 10px;
+      max-width: 88%;
+    }
+
+    .pv-aiAvatar {
+      display: grid;
+      place-items: center;
+      width: 23px;
+      height: 23px;
+      flex: none;
+      margin-top: 2px;
+      border: 1px solid rgba(110, 140, 255, 0.24);
+      border-radius: 8px;
+      background: linear-gradient(145deg, #172447, #0d1428);
+      color: #6d8aff;
+    }
+
+    .pv-aiAvatar svg {
+      width: 15px;
+      height: 11px;
+    }
+
+    .pv-aiBody {
+      min-width: 0;
+      color: var(--pv-muted);
+      font-size: 11px;
+      line-height: 1.75;
+    }
+
+    .pv-aiBody strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--pv-text-soft);
+      font-size: 10px;
+      font-weight: 560;
+    }
+
+    .pv-codeHint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 7px;
+      padding: 5px 8px;
+      border: 1px solid var(--pv-line);
+      border-radius: 6px;
+      background: var(--pv-chip);
+      color: var(--pv-text-soft);
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 9px;
+    }
+
+    .pv-codeHint i {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #7f95ff;
+    }
+
+    .pv-promptNote {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 3px;
+      color: var(--pv-muted);
+      font-size: 9px;
+      letter-spacing: 0.03em;
+    }
+
+    .pv-promptNote::before,
+    .pv-promptNote::after {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: var(--pv-line);
+    }
+
+    .pv-composerWrap {
+      position: relative;
+      padding: 10px 14px 13px;
+      border-top: 1px solid var(--pv-line);
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.1));
+    }
+
+    .pv-composer {
+      overflow: hidden;
+      border: 1px solid var(--pv-line-strong);
+      border-radius: 14px;
+      background: var(--pv-input);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    }
+
+    .pv-composerTop {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 11px 13px 8px;
+      color: var(--pv-muted);
+      font-size: 11px;
+    }
+
+    .pv-composerTop .pv-caret {
+      width: 1px;
+      height: 13px;
+      background: #7d94ff;
+      animation: pv-caret 1.1s steps(1) infinite;
+    }
+
+    .pv-composerTop .pv-shortcut {
+      margin-left: auto;
+      padding: 2px 5px;
+      border: 1px solid var(--pv-line);
+      border-radius: 4px;
+      color: var(--pv-muted);
+      font-size: 8px;
+    }
+
+    @keyframes pv-caret {
+      0%, 48% { opacity: 1; }
+      49%, 100% { opacity: 0; }
+    }
+
+    .pv-composerTools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px 8px;
+    }
+
+    .pv-toolLeft,
+    .pv-toolRight {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .pv-toolLeft {
+      flex: 1;
+    }
+
+    .pv-toolRight {
+      flex: none;
+      gap: 8px;
+    }
+
+    .pv-iconBtn {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--pv-muted);
+      cursor: pointer;
+    }
+
+    .pv-iconBtn:hover {
+      background: var(--dsw-alias-interactive-bg-hover);
+      color: var(--pv-text-soft);
+    }
+
+    .pv-iconBtn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .pv-permission {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+      max-width: 168px;
+      height: 28px;
+      padding: 0 4px 0 7px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--pv-muted);
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: default;
+    }
+
+    .pv-permission svg {
+      width: 14px;
+      height: 14px;
+      flex: none;
+    }
+
+    .pv-permission .pv-permissionChev {
+      width: 10px;
+      height: 10px;
+      opacity: 0.55;
+    }
+
+    .pv-permissionLabel {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pv-context {
+      color: var(--pv-muted);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+    }
+
+    .pv-send {
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #5c7cff, #7b5cff);
+      color: #fff;
+      box-shadow: 0 5px 14px rgba(91, 112, 255, 0.35);
+      cursor: pointer;
+    }
+
+    .pv-send svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .pv-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 18px;
+      padding: 7px 3px 0;
+      color: var(--pv-muted);
+      font-size: 9px;
+      letter-spacing: 0.015em;
+    }
+
+    .pv-statusDot {
+      width: 4px;
+      height: 4px;
+      flex: none;
+      border-radius: 50%;
+      background: #6f86ff;
+      box-shadow: 0 0 7px rgba(111, 134, 255, 0.7);
+    }
+
+    .pv-hint {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--pv-muted);
+      font-size: 9px;
+      letter-spacing: 0.03em;
+      pointer-events: none;
+    }
+
+    .pv-hint span {
+      display: grid;
+      place-items: center;
+      width: 17px;
+      height: 17px;
+      border: 1px solid var(--pv-line);
+      border-radius: 50%;
+      background: var(--pv-chip);
+      color: #8ea5ff;
+      font-size: 8px;
+    }
+
+    .pv-hint--left {
+      top: 23%;
+      left: -106px;
+      flex-direction: row-reverse;
+      text-align: right;
+    }
+
+    .pv-hint--left::after,
+    .pv-hint--right::after {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--pv-line-strong));
+    }
+
+    .pv-hint--right {
+      right: -104px;
+      bottom: 30%;
+    }
+
+    .pv-hint--right::after {
+      background: linear-gradient(90deg, var(--pv-line-strong), transparent);
+    }
+
+    .pv-footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1240px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 0 0 22px;
+      color: var(--pv-muted);
+      font-size: 9px;
+      letter-spacing: 0.035em;
+    }
+
+    .pv-footer b {
+      color: var(--pv-text-soft);
+      font-weight: 560;
+    }
+
+    .pv-keys {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pv-keys kbd {
+      padding: 2px 5px;
+      border: 1px solid var(--pv-line);
+      border-radius: 4px;
+      background: var(--pv-chip);
+      color: var(--pv-text-soft);
+      font-family: inherit;
+      font-size: 8px;
+    }
+
+    .pv-modelName {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pv-modelBadge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 15px;
+      flex: none;
+      padding: 0 5px;
+      border: 1px solid rgba(160, 180, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(143, 164, 255, 0.22);
+      color: #e9efff;
+      font-size: 8px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    html[data-theme="light"] .pv-modelBadge {
+      border-color: rgba(73, 100, 205, 0.13);
+      background: #dbe4ff;
+      color: #3550a8;
+    }
+
+    .pv-previewBadge--uninstalled {
+      border-color: rgba(112, 138, 255, 0.24);
+      background: rgba(100, 124, 255, 0.08);
+    }
+
+    .pv-composerTools .dsu-trigger {
+      max-width: 100%;
+      height: 27px;
+    }
+
+    .pv-composerTools .dsu-root {
+      display: inline-flex;
+      max-width: calc(100% - 60px);
+    }
+
+    .pv-composerTools .dsu-triggerLabel {
+      gap: 4px;
+    }
+
+    .pv-menu .pv-modelBadge,
+    .pv-modelOption .pv-modelBadge {
+      height: 14px;
+      min-width: 22px;
+      font-size: 7px;
+    }
+
+    @media (max-width: 1080px) {
+      .pv-hint {
+        display: none;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .pv-main {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 42px;
+        padding-top: 48px;
+      }
+
+      .pv-hero {
+        max-width: 620px;
+        justify-self: center;
+        text-align: center;
+      }
+
+      .pv-hero p {
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .pv-eyebrow {
+        justify-content: center;
+      }
+
+      .pv-facts {
+        justify-content: center;
+      }
+
+      .pv-stage {
+        justify-self: center;
+        max-width: 640px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .pv-header,
+      .pv-main,
+      .pv-footer {
+        width: calc(100% - 30px);
+      }
+
+      .pv-header {
+        padding-top: 15px;
+      }
+
+      .pv-previewBadge {
+        padding: 5px 8px;
+        font-size: 9px;
+      }
+
+      .pv-brandText span {
+        display: none;
+      }
+
+      .pv-main {
+        padding: 36px 0 44px;
+      }
+
+      .pv-hero h1 {
+        font-size: 39px;
+      }
+
+      .pv-hero p {
+        font-size: 12px;
+      }
+
+      .pv-window {
+        min-height: 520px;
+        border-radius: 18px;
+      }
+
+      .pv-chat {
+        padding: 18px 15px 12px;
+      }
+
+      .pv-composerWrap {
+        padding: 8px 9px 10px;
+      }
+
+      .pv-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 16px;
+      }
+
+      .pv-toolLeft .pv-iconBtn {
+        display: grid;
+      }
+
+      .pv-context,
+      .pv-permissionLabel {
+        display: none;
+      }
+
+      .pv-permission {
+        max-width: 32px;
+        padding: 0 4px;
+      }
+
+      .pv-composerTools .dsu-root {
+        max-width: calc(100% - 38px);
+      }
+    }
+
+    @media (max-width: 440px) {
+      .pv-composerTools .dsu-trigger {
+        max-width: 142px;
+      }
+
+      .pv-permission {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pv-caret,
+      .pv-stage::before {
+        animation: none !important;
+      }
+    }
+
+.dsu-root {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+}
+
+.dsu-trigger {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: min(360px, 45cqw);
+  height: 28px;
+  margin: 0;
+  padding: 0 4px 0 8px;
+  border: 0;
+  border-radius: var(--dsw-radius-sm, 8px);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+.dsu-trigger:hover:not(:disabled),
+.dsu-trigger[data-open="true"] {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.dsu-trigger:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-trigger:disabled {
+  color: var(--dsw-alias-label-dimmed);
+  cursor: default;
+}
+
+.dsu-triggerLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: currentColor;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.dsu-triggerLabel > * {
+  min-width: 0;
+}
+
+.dsu-modelName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dsu-modelBadge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  margin-left: 1px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(91, 124, 255, 0.18);
+  background: color-mix(in srgb, var(--dsw-alias-state-business-primary, #5b7cff) 22%, transparent);
+  color: var(--dsw-alias-state-business-primary, #5b7cff);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+}
+
+.dsu-triggerLevel {
+  flex: none;
+  color: var(--dsw-alias-label-caption);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.dsu-triggerChev {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  opacity: 0.55;
+}
+
+.dsu-triggerSpinner {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgba(143, 165, 255, 0.34);
+  border-top-color: #aab9ff;
+  border-radius: 50%;
+  animation: dsu-spin 0.8s linear infinite;
+}
+
+.dsu-menu {
+  position: fixed;
+  z-index: 1100;
+  box-sizing: border-box;
+  width: min(330px, calc(100vw - 24px));
+  padding: 5px;
+  border: 1px solid var(--dsw-alias-border-l1, rgba(128, 140, 190, 0.18));
+  border-radius: 14px;
+  background: var(--dsw-specific-menu, var(--dsw-alias-bg-overlay, #171a25));
+  box-shadow: var(--dsw-elevation-prominent, 0 18px 48px rgba(0, 0, 0, 0.45));
+  color: var(--dsw-alias-label-primary);
+  -webkit-backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px));
+  backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px));
+  outline: none;
+}
+
+.dsu-menu[data-ready="true"] {
+  animation: dsu-menu-in 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.dsu-menu:focus-visible {
+  outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+  outline-offset: 2px;
+}
+
+.dsu-menu button {
+  font-family: inherit;
+}
+
+.dsu-menuRoot {
+  display: flex;
+  flex-direction: column;
+}
+
+.dsu-menuRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 13px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 18px;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.dsu-menuRow:hover:not(:disabled),
+.dsu-menuRow:focus-visible {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.dsu-menuRow:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-menuRow:disabled {
+  color: var(--dsw-alias-label-dimmed);
+  cursor: default;
+}
+
+.dsu-menuLabel {
+  color: var(--dsw-alias-label-primary);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.dsu-menuValue {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.dsu-menuValue > * {
+  min-width: 0;
+}
+
+.dsu-menuChev {
+  width: 13px;
+  height: 13px;
+  color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary));
+  opacity: 0.62;
+}
+
+.dsu-menu .dsu-pane {
+  margin-top: 0;
+  padding: 2px;
+}
+
+.dsu-menu .dsu-paneHead {
+  grid-template-columns: 26px minmax(0, 1fr) 26px;
+  margin: 0 0 2px;
+  padding: 0 2px;
+}
+
+.dsu-menu .dsu-paneTitle {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 10.5px;
+}
+
+.dsu-menu .dsu-modelList {
+  max-height: min(260px, 50vh);
+}
+
+.dsu-menuError {
+  margin: 5px 8px 4px;
+  color: var(--dsw-alias-state-error-primary, #ff8f8f);
+  font-size: 10.5px;
+  line-height: 15px;
+}
+
+.dsu-card {
+  position: fixed;
+  z-index: 1100;
+  box-sizing: border-box;
+  width: min(360px, calc(100vw - 24px));
+  padding: 14px 17px 13px;
+  border: 1px solid var(--dsw-alias-border-l1, rgba(128, 140, 190, 0.18));
+  border-radius: 20px;
+  background: var(--dsw-specific-menu, var(--dsw-alias-bg-overlay, #171a25));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, #4a63ff 10%, var(--dsw-specific-menu, var(--dsw-alias-bg-overlay, #171a25))),
+    var(--dsw-specific-menu, var(--dsw-alias-bg-overlay, #171a25)) 62%
+  );
+  box-shadow: var(--dsw-elevation-prominent, 0 18px 48px rgba(0, 0, 0, 0.45));
+  color: var(--dsw-alias-label-primary);
+  -webkit-backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px));
+  backdrop-filter: var(--dsw-menu-backdrop-filter, blur(20px));
+  isolation: isolate;
+  outline: none;
+}
+
+.dsu-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120% 82% at 50% -28%, rgba(110, 130, 255, 0.22), transparent 62%);
+  pointer-events: none;
+}
+
+.dsu-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dsu-card[data-ready="true"] {
+  animation: dsu-card-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.dsu-card:focus-visible {
+  outline: 2px solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+  outline-offset: 2px;
+}
+
+.dsu-card button {
+  font-family: inherit;
+}
+
+.dsu-head {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 26px;
+  align-items: center;
+  min-height: 26px;
+  margin: 0 0 1px;
+}
+
+.dsu-whaleAvatar {
+  display: grid;
+  justify-self: start;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(112, 142, 255, 0.18);
+  border-radius: 8px;
+  background:
+    radial-gradient(130% 100% at 30% 0%, rgba(60, 92, 220, 0.42), transparent 64%),
+    linear-gradient(145deg, #121a34, #080d1e);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+  animation: dsu-whale-glow 4.2s ease-in-out infinite;
+}
+
+.dsu-whale {
+  display: block;
+  width: 18px;
+  height: 13.3px;
+  color: #5f7dff;
+  filter: drop-shadow(0 0 6px rgba(84, 119, 255, 0.4));
+}
+
+.dsu-title {
+  justify-self: center;
+  color: var(--dsw-alias-label-primary);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+}
+
+@supports (background: color-mix(in srgb, white, black)) {
+  .dsu-title {
+    background: linear-gradient(
+      92deg,
+      color-mix(in srgb, var(--dsw-alias-label-primary) 58%, #7693ff),
+      color-mix(in srgb, var(--dsw-alias-label-primary) 80%, #b9c9ff)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.dsu-title[data-max="true"] {
+  color: #b3c0ff;
+  filter: drop-shadow(0 0 9px rgba(101, 88, 255, 0.38));
+}
+
+@supports (background: color-mix(in srgb, white, black)) {
+  .dsu-title[data-max="true"] {
+    background: linear-gradient(
+      100deg,
+      #1d49ff 0%,
+      #2c5bff 27%,
+      #4b4dff 56%,
+      #6a43ff 79%,
+      #9a4dff 100%
+    );
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: dsu-title-flow 2.2s ease-in-out infinite;
+  }
+}
+
+@keyframes dsu-title-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.dsu-reset {
+  display: grid;
+  justify-self: end;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary));
+  cursor: pointer;
+  outline: none;
+}
+
+.dsu-reset:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.dsu-reset:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-reset:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.dsu-resetIcon {
+  display: grid;
+  place-items: center;
+}
+
+.dsu-resetIcon[data-spin="true"] .dsu-resetSvg {
+  animation: dsu-reset-spin 0.52s cubic-bezier(0.32, 0.72, 0.24, 1);
+}
+
+.dsu-resetSvg {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+.dsu-modelRow {
+  display: flex;
+  justify-content: center;
+  min-height: 20px;
+  margin-top: 1px;
+}
+
+.dsu-modelText {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dsu-main {
+  min-width: 0;
+}
+
+.dsu-slider {
+  margin-top: 14px;
+}
+
+.dsu-track {
+  --pct: 0%;
+  position: relative;
+  height: 48px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #0a1024, #0d1736 70%, #0b1230);
+  box-shadow:
+    inset 0 0 0 1px rgba(130, 150, 220, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 22px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dsu-track:active,
+.dsu-track[data-drag="true"] {
+  cursor: grabbing;
+}
+
+.dsu-track:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(130, 150, 220, 0.2),
+    0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-track[aria-disabled="true"] {
+  cursor: default;
+  opacity: 1;
+}
+
+.dsu-range {
+  position: absolute;
+  z-index: 1;
+  top: 3px;
+  right: 24px;
+  bottom: 3px;
+  left: 24px;
+  pointer-events: none;
+}
+
+.dsu-fill {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: -21px;
+  width: calc(21px + var(--pct));
+  overflow: hidden;
+  border-radius: 999px;
+  background: linear-gradient(100deg, #1d49ff 0%, #2c5bff 27%, #4b4dff 56%, #6a43ff 79%, #9a4dff 100%);
+  background-size: 220% 100%;
+  box-shadow:
+    0 0 20px rgba(64, 92, 255, 0.36),
+    inset 0 0 16px rgba(255, 255, 255, 0.08);
+  transition: width 0.42s cubic-bezier(0.22, 0.8, 0.22, 1);
+  animation: dsu-flow 7s ease-in-out infinite;
+}
+
+.dsu-fillAurora {
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(circle at 28% 54%, rgba(104, 196, 255, 0.45), transparent 40%),
+    radial-gradient(circle at 72% 38%, rgba(168, 118, 255, 0.52), transparent 46%);
+  filter: blur(7px);
+  opacity: 0.8;
+  animation: dsu-aurora 6.4s ease-in-out infinite;
+}
+
+.dsu-fillSheen {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  width: 42%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+  opacity: 0;
+  transform: rotate(9deg);
+  animation: dsu-sheen 5.8s ease-in-out infinite;
+}
+
+.dsu-stars {
+  position: absolute;
+  inset: 0;
+  animation: dsu-star-drift 9s ease-in-out infinite alternate;
+}
+
+.dsu-warp {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.dsu-warpLine {
+  position: absolute;
+  left: -38%;
+  width: 34%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(190, 216, 255, 0.36), #ffffff 58%, transparent);
+  filter: drop-shadow(0 0 4px rgba(190, 216, 255, 0.95));
+  opacity: 0;
+}
+
+.dsu-warpLine:first-child {
+  top: 31%;
+  animation: dsu-warp 0.58s linear infinite;
+}
+
+.dsu-warpLine:last-child {
+  top: 65%;
+  width: 24%;
+  animation: dsu-warp 0.44s linear 0.18s infinite;
+  opacity: 0.8;
+}
+
+.dsu-track[data-max="true"] .dsu-warp {
+  opacity: 1;
+}
+
+.dsu-track[data-max="true"] .dsu-fill {
+  animation-duration: 2.2s;
+}
+
+.dsu-track[data-max="true"] .dsu-fillAurora {
+  animation-duration: 3.2s;
+}
+
+.dsu-track[data-max="true"] .dsu-fillSheen {
+  animation-duration: 2.4s;
+}
+
+.dsu-track[data-max="true"] .dsu-stars {
+  animation-duration: 3s;
+}
+
+.dsu-star {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 5px rgba(220, 230, 255, 0.9);
+  animation: dsu-twinkle var(--dur) ease-in-out var(--delay) infinite;
+}
+
+.dsu-thumb {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: var(--pct);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 27%, #ffffff 0%, #fafbff 42%, #e9edff 100%);
+  box-shadow:
+    0 3px 8px rgba(3, 8, 30, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 -5px 10px rgba(160, 175, 255, 0.16),
+    0 0 24px rgba(120, 145, 255, 0.22);
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition:
+    left 0.42s cubic-bezier(0.22, 0.8, 0.22, 1),
+    transform 0.18s ease,
+    box-shadow 0.2s ease;
+}
+
+.dsu-thumb::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(165, 185, 255, 0.22);
+  border-radius: 50%;
+  animation: dsu-breathe 3.2s ease-in-out infinite;
+}
+
+.dsu-track[data-max="true"] .dsu-thumb {
+  box-shadow:
+    0 3px 9px rgba(3, 8, 30, 0.44),
+    0 0 0 1px rgba(255, 255, 255, 0.62),
+    inset 0 -5px 10px rgba(160, 175, 255, 0.16),
+    0 0 32px rgba(139, 110, 255, 0.55);
+}
+
+.dsu-track[data-drag="true"] .dsu-fill,
+.dsu-track[data-drag="true"] .dsu-thumb {
+  transition: none;
+}
+
+.dsu-track[data-drag="true"] .dsu-thumb {
+  transform: translateX(-50%) scale(1.06);
+}
+
+.dsu-labels {
+  position: relative;
+  height: 13px;
+  margin: 7px 24px 0;
+}
+
+.dsu-label {
+  position: absolute;
+  top: 0;
+  margin: 0;
+  padding: 1px 2px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--dsw-alias-label-caption);
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  transform: translateX(-50%);
+  transition: color 0.18s ease;
+}
+
+.dsu-label:hover:not(:disabled) {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.dsu-label[data-active="true"] {
+  color: color-mix(in srgb, var(--dsw-alias-label-primary) 70%, #9aaeff);
+}
+
+.dsu-label:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.dsu-empty {
+  padding: 22px 8px 16px;
+  color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary));
+  font-size: 11.5px;
+  line-height: 17px;
+  text-align: center;
+}
+
+.dsu-error {
+  margin-top: 9px;
+  color: var(--dsw-alias-state-error-primary, #ff8f8f);
+  font-size: 10.5px;
+  line-height: 15px;
+  text-align: center;
+}
+
+.dsu-pane {
+  margin-top: 10px;
+}
+
+.dsu-paneHead {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 24px;
+  align-items: center;
+  min-height: 24px;
+  margin-bottom: 3px;
+}
+
+.dsu-back {
+  display: grid;
+  justify-self: start;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary));
+  cursor: pointer;
+  outline: none;
+}
+
+.dsu-back:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.dsu-back:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-backIcon {
+  width: 13px;
+  height: 13px;
+  transform: rotate(90deg);
+}
+
+.dsu-paneTitle {
+  overflow: hidden;
+  color: var(--dsw-alias-label-tertiary, var(--dsw-alias-label-secondary));
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dsu-modelList {
+  max-height: 188px;
+  padding: 2px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--dsw-alias-scrollbar-bg-l2, rgba(120, 135, 170, 0.3)) transparent;
+  scrollbar-width: thin;
+}
+
+.dsu-modelList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dsu-modelList::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: var(--dsw-alias-scrollbar-bg-l2, rgba(120, 135, 170, 0.3));
+  background-clip: content-box;
+}
+
+.dsu-modelGroup + .dsu-modelGroup {
+  margin-top: 3px;
+}
+
+.dsu-modelGroupLabel {
+  padding: 7px 8px 3px;
+  overflow: hidden;
+  color: var(--dsw-alias-label-caption);
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dsu-modelOption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 16px;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.dsu-modelOption:hover:not(:disabled) {
+  background: var(--dsw-alias-interactive-bg-hover);
+}
+
+.dsu-modelOption[data-current="true"] {
+  background: color-mix(in srgb, #4c66ff 12%, transparent);
+}
+
+.dsu-modelOption:focus-visible {
+  box-shadow: 0 0 0 2px var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary, #5b7cff));
+}
+
+.dsu-modelOption:disabled {
+  color: var(--dsw-alias-label-dimmed);
+  cursor: default;
+}
+
+.dsu-modelOptionName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dsu-check {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--dsw-alias-brand-primary, #6d8aff);
+}
+
+.dsu-checkSvg {
+  width: 13px;
+  height: 13px;
+}
+
+.dsu-listSpinner {
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid rgba(143, 165, 255, 0.3);
+  border-top-color: #aab9ff;
+  border-radius: 50%;
+  animation: dsu-spin 0.8s linear infinite;
+}
+
+@keyframes dsu-flow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes dsu-aurora {
+  0%, 100% { transform: translate3d(-6%, -4%, 0) scale(1); opacity: 0.65; }
+  50% { transform: translate3d(7%, 5%, 0) scale(1.1); opacity: 0.95; }
+}
+
+@keyframes dsu-sheen {
+  0% { transform: translateX(-80%) rotate(9deg); opacity: 0; }
+  16% { opacity: 0.62; }
+  62% { opacity: 0.12; }
+  100% { transform: translateX(280%) rotate(9deg); opacity: 0; }
+}
+
+@keyframes dsu-twinkle {
+  0%, 100% { opacity: 0.18; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+
+@keyframes dsu-star-drift {
+  from { transform: translate3d(-3px, 1px, 0); }
+  to { transform: translate3d(4px, -2px, 0); }
+}
+
+@keyframes dsu-breathe {
+  0%, 100% { transform: scale(0.94); opacity: 0.58; }
+  50% { transform: scale(1.06); opacity: 0.16; }
+}
+
+@keyframes dsu-whale-glow {
+  0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24), 0 0 0 rgba(84, 119, 255, 0); }
+  50% { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.26), 0 0 14px rgba(84, 119, 255, 0.16); }
+}
+
+@keyframes dsu-menu-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.994); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dsu-warp {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  72% { opacity: 0.95; }
+  100% { transform: translateX(410%); opacity: 0; }
+}
+
+@keyframes dsu-reset-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes dsu-card-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dsu-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsu-card,
+  .dsu-menu,
+  .dsu-title,
+  .dsu-whaleAvatar,
+  .dsu-fill,
+  .dsu-fillAurora,
+  .dsu-fillSheen,
+  .dsu-stars,
+  .dsu-star,
+  .dsu-warpLine,
+  .dsu-thumb::before,
+  .dsu-resetIcon[data-spin="true"] .dsu-resetSvg,
+  .dsu-triggerSpinner,
+  .dsu-listSpinner {
+    animation: none !important;
+  }
+
+  .dsu-warp {
+    display: none;
+  }
+
+  .dsu-fill,
+  .dsu-thumb,
+  .dsu-label {
+    transition-duration: 0.01ms;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header class="pv-header">
+    <div class="pv-brand">
+      <span class="pv-logo" aria-hidden="true">
+        <svg viewBox="0 0 23.16 17.04" fill="currentColor"><path d="M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 22.4223 1.65519C22.3733 1.69269 22.3318 1.74169 22.2903 1.78669C21.9317 2.1697 21.5127 2.42121 20.9657 2.39121C20.1657 2.34621 19.4827 2.59771 18.8787 3.20973C18.7502 2.45521 18.3236 2.0047 17.6746 1.71569C17.3351 1.56568 16.9916 1.41518 16.7536 1.08867C16.5876 0.856163 16.5421 0.597155 16.4591 0.341647C16.4061 0.187643 16.3536 0.0301382 16.1761 0.00363739C15.9836 -0.0263635 15.9081 0.135141 15.8326 0.270145C15.5306 0.822162 15.4136 1.43018 15.4251 2.0462C15.4516 3.43174 16.0366 4.53527 17.1991 5.3203C17.3311 5.4103 17.3651 5.5003 17.3236 5.63181C17.2441 5.90231 17.1501 6.16482 17.0671 6.43533C17.0141 6.60784 16.9351 6.64584 16.7501 6.57033C16.1121 6.30383 15.5611 5.90931 15.074 5.4328C14.2475 4.63328 13.5 3.75075 12.568 3.05973C12.349 2.89822 12.13 2.74822 11.9034 2.60522C10.9524 1.68169 12.028 0.923165 12.277 0.833162C12.5375 0.739159 12.3675 0.41615 11.5259 0.42015C10.6844 0.42365 9.91439 0.705658 8.93286 1.08117C8.78935 1.13767 8.63835 1.17867 8.48384 1.21267C7.59332 1.04367 6.66829 1.00617 5.70226 1.11517C3.88321 1.31768 2.43016 2.1777 1.36213 3.64575C0.0790928 5.4103 -0.222916 7.41536 0.146595 9.50642C0.535106 11.7105 1.66014 13.535 3.38869 14.9616C5.18125 16.4406 7.24581 17.1657 9.60138 17.0266C11.0319 16.9441 12.6245 16.7526 14.421 15.2321C14.874 15.4576 15.3496 15.5476 16.1381 15.6151C16.7456 15.6716 17.3306 15.5851 17.7836 15.4911C18.4931 15.3411 18.4441 14.6841 18.1876 14.5636C16.1081 13.595 16.5646 13.9891 16.1496 13.67C17.2061 12.42 18.8202 10.1979 19.3182 7.17235C19.3672 6.83834 19.4297 6.36783 19.4222 6.09732C19.4182 5.93231 19.4562 5.86831 19.6447 5.84931C20.1657 5.78931 20.6712 5.64681 21.1357 5.3913C22.4833 4.65528 23.0268 3.44624 23.1548 1.9972C23.1738 1.77569 23.1508 1.54668 22.9168 1.43018ZM11.1749 14.4736C9.15936 12.889 8.18184 12.3675 7.77832 12.39C7.40081 12.4125 7.46881 12.8445 7.55182 13.126C7.63882 13.404 7.75182 13.5955 7.91033 13.8396C8.01983 14.0011 8.09533 14.2411 7.80083 14.4216C7.15181 14.8231 6.02327 14.2866 5.97027 14.2601C4.65673 13.4865 3.5587 12.4655 2.78467 11.069C2.03715 9.72493 1.60314 8.28289 1.53164 6.74384C1.51264 6.37233 1.62214 6.24082 1.99215 6.17332C2.47916 6.08332 2.98118 6.06432 3.46769 6.13582C5.52476 6.43633 7.27581 7.35586 8.74385 8.8129C9.58188 9.64243 10.2159 10.634 10.8689 11.6025C11.5634 12.631 12.3105 13.611 13.262 14.4146C13.598 14.6961 13.866 14.9101 14.1225 15.0681C13.349 15.1546 12.058 15.1731 11.1749 14.4746L11.1749 14.4736ZM12.141 8.25988C12.141 8.09488 12.273 7.96338 12.439 7.96338C12.4765 7.96338 12.5105 7.97088 12.541 7.98188C12.5825 7.99688 12.6205 8.01938 12.6505 8.05338C12.7035 8.10588 12.7335 8.18088 12.7335 8.25988C12.7335 8.42489 12.6015 8.55639 12.4355 8.55639C12.2695 8.55639 12.141 8.42489 12.141 8.25988ZM15.1415 9.79893C14.949 9.87793 14.7565 9.94544 14.5715 9.95294C14.2845 9.96794 13.9715 9.85143 13.8015 9.70893C13.5375 9.48742 13.3485 9.36342 13.2695 8.97691C13.2355 8.8119 13.2545 8.55639 13.2845 8.40989C13.3525 8.09438 13.277 7.89187 13.0545 7.70787C12.8735 7.55786 12.643 7.51636 12.39 7.51636C12.2955 7.51636 12.209 7.47486 12.1445 7.44136C12.039 7.38886 11.9519 7.25735 12.035 7.09585C12.0615 7.04335 12.19 6.91584 12.22 6.89334C12.5635 6.69784 12.9595 6.76184 13.326 6.90834C13.6655 7.04735 13.9225 7.30236 14.292 7.66287C14.6695 8.09838 14.7375 8.21838 14.9525 8.54539C15.1225 8.8009 15.277 9.06341 15.3831 9.36392C15.4471 9.55142 15.3641 9.70493 15.1415 9.79893Z"/></svg>
+      </span>
+      <div class="pv-brandText">
+        <strong>鲸鲸推理</strong>
+        <span>DeepSeek Harness · UI Plugin Preview</span>
+      </div>
+    </div>
+    <div class="pv-headerRight">
+      <span class="pv-previewBadge pv-previewBadge--uninstalled">独立预览 · 未安装</span>
+      <button class="pv-themeBtn" id="themeBtn" type="button" aria-label="切换为浅色主题">
+        <svg class="pv-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.4 14.7A8.6 8.6 0 0 1 9.3 3.6 8.7 8.7 0 1 0 20.4 14.7Z" stroke-linejoin="round"/></svg>
+        <svg class="pv-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.1"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="pv-main">
+    <section class="pv-hero">
+      <div class="pv-eyebrow">A quieter way to think deeper</div>
+      <h1>先选模型，<br><em>再选思考的深度。</em></h1>
+      <p>熟悉的模型栏留在输入框右侧。左侧保留权限选择，点击「模型」切换版本，点击「推理等级」，<b>鲸鲸</b>的拖动卡片才会展开。四档强度、蓝色流光，拖动时界面保持安静，不再跳动或闪烁。停在 <b>Max</b> 时标题会化身「鲸神」，渐变与光流一起加速；拖回其他档位即恢复「鲸鲸」。</p>
+      <div class="pv-facts">
+        <span class="pv-fact"><b>4</b> 档推理强度</span>
+        <span class="pv-fact"><b>2</b> 步选择</span>
+        <span class="pv-fact"><b>Max</b> 极速流光</span>
+      </div>
+    </section>
+
+    <section class="pv-stage" aria-label="鲸鲸推理插件交互演示">
+      <div class="pv-hint pv-hint--left"><span>1</span>权限选择留在左侧</div>
+      <div class="pv-hint pv-hint--right"><span>2</span>模型栏在右侧，点击再展开</div>
+
+      <div class="pv-window">
+        <div class="pv-windowBar">
+          <span class="pv-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="pv-windowTitle">DeepSeek Harness</span>
+          <span class="pv-windowMode">新对话</span>
+        </div>
+
+        <div class="pv-chat">
+          <div class="pv-userMsg">帮我把这份方案压缩成三页，保留关键数据。</div>
+          <div class="pv-aiMsg">
+            <span class="pv-aiAvatar" aria-hidden="true">
+              <svg viewBox="0 0 23.16 17.04" fill="currentColor"><path d="M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 22.4223 1.65519C22.3733 1.69269 22.3318 1.74169 22.2903 1.78669C21.9317 2.1697 21.5127 2.42121 20.9657 2.39121C20.1657 2.34621 19.4827 2.59771 18.8787 3.20973C18.7502 2.45521 18.3236 2.0047 17.6746 1.71569C17.3351 1.56568 16.9916 1.41518 16.7536 1.08867C16.5876 0.856163 16.5421 0.597155 16.4591 0.341647C16.4061 0.187643 16.3536 0.0301382 16.1761 0.00363739C15.9836 -0.0263635 15.9081 0.135141 15.8326 0.270145C15.5306 0.822162 15.4136 1.43018 15.4251 2.0462C15.4516 3.43174 16.0366 4.53527 17.1991 5.3203C17.3311 5.4103 17.3651 5.5003 17.3236 5.63181C17.2441 5.90231 17.1501 6.16482 17.0671 6.43533C17.0141 6.60784 16.9351 6.64584 16.7501 6.57033C16.1121 6.30383 15.5611 5.90931 15.074 5.4328C14.2475 4.63328 13.5 3.75075 12.568 3.05973C12.349 2.89822 12.13 2.74822 11.9034 2.60522C10.9524 1.68169 12.028 0.923165 12.277 0.833162C12.5375 0.739159 12.3675 0.41615 11.5259 0.42015C10.6844 0.42365 9.91439 0.705658 8.93286 1.08117C8.78935 1.13767 8.63835 1.17867 8.48384 1.21267C7.59332 1.04367 6.66829 1.00617 5.70226 1.11517C3.88321 1.31768 2.43016 2.1777 1.36213 3.64575C0.0790928 5.4103 -0.222916 7.41536 0.146595 9.50642C0.535106 11.7105 1.66014 13.535 3.38869 14.9616C5.18125 16.4406 7.24581 17.1657 9.60138 17.0266C11.0319 16.9441 12.6245 16.7526 14.421 15.2321C14.874 15.4576 15.3496 15.5476 16.1381 15.6151C16.7456 15.6716 17.3306 15.5851 17.7836 15.4911C18.4931 15.3411 18.4441 14.6841 18.1876 14.5636C16.1081 13.595 16.5646 13.9891 16.1496 13.67C17.2061 12.42 18.8202 10.1979 19.3182 7.17235C19.3672 6.83834 19.4297 6.36783 19.4222 6.09732C19.4182 5.93231 19.4562 5.86831 19.6447 5.84931C20.1657 5.78931 20.6712 5.64681 21.1357 5.3913C22.4833 4.65528 23.0268 3.44624 23.1548 1.9972C23.1738 1.77569 23.1508 1.54668 22.9168 1.43018ZM11.1749 14.4736C9.15936 12.889 8.18184 12.3675 7.77832 12.39C7.40081 12.4125 7.46881 12.8445 7.55182 13.126C7.63882 13.404 7.75182 13.5955 7.91033 13.8396C8.01983 14.0011 8.09533 14.2411 7.80083 14.4216C7.15181 14.8231 6.02327 14.2866 5.97027 14.2601C4.65673 13.4865 3.5587 12.4655 2.78467 11.069C2.03715 9.72493 1.60314 8.28289 1.53164 6.74384C1.51264 6.37233 1.62214 6.24082 1.99215 6.17332C2.47916 6.08332 2.98118 6.06432 3.46769 6.13582C5.52476 6.43633 7.27581 7.35586 8.74385 8.8129C9.58188 9.64243 10.2159 10.634 10.8689 11.6025C11.5634 12.631 12.3105 13.611 13.262 14.4146C13.598 14.6961 13.866 14.9101 14.1225 15.0681C13.349 15.1546 12.058 15.1731 11.1749 14.4746L11.1749 14.4736ZM12.141 8.25988C12.141 8.09488 12.273 7.96338 12.439 7.96338C12.4765 7.96338 12.5105 7.97088 12.541 7.98188C12.5825 7.99688 12.6205 8.01938 12.6505 8.05338C12.7035 8.10588 12.7335 8.18088 12.7335 8.25988C12.7335 8.42489 12.6015 8.55639 12.4355 8.55639C12.2695 8.55639 12.141 8.42489 12.141 8.25988ZM15.1415 9.79893C14.949 9.87793 14.7565 9.94544 14.5715 9.95294C14.2845 9.96794 13.9715 9.85143 13.8015 9.70893C13.5375 9.48742 13.3485 9.36342 13.2695 8.97691C13.2355 8.8119 13.2545 8.55639 13.2845 8.40989C13.3525 8.09438 13.277 7.89187 13.0545 7.70787C12.8735 7.55786 12.643 7.51636 12.39 7.51636C12.2955 7.51636 12.209 7.47486 12.1445 7.44136C12.039 7.38886 11.9519 7.25735 12.035 7.09585C12.0615 7.04335 12.19 6.91584 12.22 6.89334C12.5635 6.69784 12.9595 6.76184 13.326 6.90834C13.6655 7.04735 13.9225 7.30236 14.292 7.66287C14.6695 8.09838 14.7375 8.21838 14.9525 8.54539C15.1225 8.8009 15.277 9.06341 15.3831 9.36392C15.4471 9.55142 15.3641 9.70493 15.1415 9.79893Z"/></svg>
+            </span>
+            <div class="pv-aiBody">
+              <strong>DeepSeek</strong>
+              可以。我会先提炼结论，再按「现状 / 方案 / 下一步」重组内容，最后核对数字与引用。
+              <div class="pv-codeHint"><i></i>3 pages · 12 slides trimmed</div>
+            </div>
+          </div>
+          <div class="pv-promptNote">选择栏在输入框内，不遮挡对话</div>
+        </div>
+
+        <div class="pv-composerWrap">
+          <div class="pv-composer">
+            <div class="pv-composerTop">
+              <span>输入消息…</span><span class="pv-caret" aria-hidden="true"></span>
+              <span class="pv-shortcut">Ctrl ↵</span>
+            </div>
+            <div class="pv-composerTools">
+              <div class="pv-toolLeft">
+                <button class="pv-iconBtn" type="button" aria-label="更多工具" tabindex="-1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+                <button class="pv-permission" type="button" aria-label="权限选择：完全访问" title="权限选择（预览）" tabindex="-1">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.9 13 3.8v3.7c0 3.1-1.9 5.4-5 6.7-3.1-1.3-5-3.6-5-6.7V3.8L8 1.9Z"/><path d="m5.8 8 1.5 1.5 2.9-3"/></svg>
+                  <span class="pv-permissionLabel">完全访问</span>
+                  <svg class="pv-permissionChev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
+                </button>
+              </div>
+              <div class="pv-toolRight">
+                <span class="pv-context">128K</span>
+                <div id="ultraTrigger" class="dsu-root">
+                  <button type="button" class="dsu-trigger" id="trigger" aria-haspopup="dialog" aria-expanded="false" aria-label="选择模型与推理等级">
+                    <span class="dsu-triggerLabel" id="triggerLabel">
+                      <span class="dsu-modelName" id="triggerModel">DeepSeek-V4.1-Flash</span>
+                      <span class="dsu-modelBadge" id="triggerBadge">1017</span>
+                    </span>
+                    <span class="dsu-triggerLevel" id="triggerLevel">Max</span>
+                    <svg class="dsu-triggerChev" id="triggerChev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg>
+                    <span class="dsu-triggerSpinner" id="triggerSpinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+                <button class="pv-send" type="button" aria-label="发送" tabindex="-1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="pv-status" id="status" role="status" aria-live="polite">
+            <span class="pv-statusDot" aria-hidden="true"></span>
+            <span id="statusText">点击模型栏，打开两级选择</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pv-footer">
+    <span><b>仅用于网页预览</b> · 不会安装到 DeepSeek Harness，也不会修改现有配置</span>
+    <span class="pv-keys"><kbd>拖动</kbd><kbd>← →</kbd><kbd>Esc</kbd> 关闭</span>
+  </footer>
+
+  <div id="surfaceHost"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var WHALE_PATH = 'M22.9168 1.43018C22.6713 1.31018 22.5658 1.53918 22.4223 1.65519C22.3733 1.69269 22.3318 1.74169 22.2903 1.78669C21.9317 2.1697 21.5127 2.42121 20.9657 2.39121C20.1657 2.34621 19.4827 2.59771 18.8787 3.20973C18.7502 2.45521 18.3236 2.0047 17.6746 1.71569C17.3351 1.56568 16.9916 1.41518 16.7536 1.08867C16.5876 0.856163 16.5421 0.597155 16.4591 0.341647C16.4061 0.187643 16.3536 0.0301382 16.1761 0.00363739C15.9836 -0.0263635 15.9081 0.135141 15.8326 0.270145C15.5306 0.822162 15.4136 1.43018 15.4251 2.0462C15.4516 3.43174 16.0366 4.53527 17.1991 5.3203C17.3311 5.4103 17.3651 5.5003 17.3236 5.63181C17.2441 5.90231 17.1501 6.16482 17.0671 6.43533C17.0141 6.60784 16.9351 6.64584 16.7501 6.57033C16.1121 6.30383 15.5611 5.90931 15.074 5.4328C14.2475 4.63328 13.5 3.75075 12.568 3.05973C12.349 2.89822 12.13 2.74822 11.9034 2.60522C10.9524 1.68169 12.028 0.923165 12.277 0.833162C12.5375 0.739159 12.3675 0.41615 11.5259 0.42015C10.6844 0.42365 9.91439 0.705658 8.93286 1.08117C8.78935 1.13767 8.63835 1.17867 8.48384 1.21267C7.59332 1.04367 6.66829 1.00617 5.70226 1.11517C3.88321 1.31768 2.43016 2.1777 1.36213 3.64575C0.0790928 5.4103 -0.222916 7.41536 0.146595 9.50642C0.535106 11.7105 1.66014 13.535 3.38869 14.9616C5.18125 16.4406 7.24581 17.1657 9.60138 17.0266C11.0319 16.9441 12.6245 16.7526 14.421 15.2321C14.874 15.4576 15.3496 15.5476 16.1381 15.6151C16.7456 15.6716 17.3306 15.5851 17.7836 15.4911C18.4931 15.3411 18.4441 14.6841 18.1876 14.5636C16.1081 13.595 16.5646 13.9891 16.1496 13.67C17.2061 12.42 18.8202 10.1979 19.3182 7.17235C19.3672 6.83834 19.4297 6.36783 19.4222 6.09732C19.4182 5.93231 19.4562 5.86831 19.6447 5.84931C20.1657 5.78931 20.6712 5.64681 21.1357 5.3913C22.4833 4.65528 23.0268 3.44624 23.1548 1.9972C23.1738 1.77569 23.1508 1.54668 22.9168 1.43018ZM11.1749 14.4736C9.15936 12.889 8.18184 12.3675 7.77832 12.39C7.40081 12.4125 7.46881 12.8445 7.55182 13.126C7.63882 13.404 7.75182 13.5955 7.91033 13.8396C8.01983 14.0011 8.09533 14.2411 7.80083 14.4216C7.15181 14.8231 6.02327 14.2866 5.97027 14.2601C4.65673 13.4865 3.5587 12.4655 2.78467 11.069C2.03715 9.72493 1.60314 8.28289 1.53164 6.74384C1.51264 6.37233 1.62214 6.24082 1.99215 6.17332C2.47916 6.08332 2.98118 6.06432 3.46769 6.13582C5.52476 6.43633 7.27581 7.35586 8.74385 8.8129C9.58188 9.64243 10.2159 10.634 10.8689 11.6025C11.5634 12.631 12.3105 13.611 13.262 14.4146C13.598 14.6961 13.866 14.9101 14.1225 15.0681C13.349 15.1546 12.058 15.1731 11.1749 14.4746L11.1749 14.4736ZM12.141 8.25988C12.141 8.09488 12.273 7.96338 12.439 7.96338C12.4765 7.96338 12.5105 7.97088 12.541 7.98188C12.5825 7.99688 12.6205 8.01938 12.6505 8.05338C12.7035 8.10588 12.7335 8.18088 12.7335 8.25988C12.7335 8.42489 12.6015 8.55639 12.4355 8.55639C12.2695 8.55639 12.141 8.42489 12.141 8.25988ZM15.1415 9.79893C14.949 9.87793 14.7565 9.94544 14.5715 9.95294C14.2845 9.96794 13.9715 9.85143 13.8015 9.70893C13.5375 9.48742 13.3485 9.36342 13.2695 8.97691C13.2355 8.8119 13.2545 8.55639 13.2845 8.40989C13.3525 8.09438 13.277 7.89187 13.0545 7.70787C12.8735 7.55786 12.643 7.51636 12.39 7.51636C12.2955 7.51636 12.209 7.47486 12.1445 7.44136C12.039 7.38886 11.9519 7.25735 12.035 7.09585C12.0615 7.04335 12.19 6.91584 12.22 6.89334C12.5635 6.69784 12.9595 6.76184 13.326 6.90834C13.6655 7.04735 13.9225 7.30236 14.292 7.66287C14.6695 8.09838 14.7375 8.21838 14.9525 8.54539C15.1225 8.8009 15.277 9.06341 15.3831 9.36392C15.4471 9.55142 15.3641 9.70493 15.1415 9.79893Z';
+
+      var MODELS = [
+        {
+          id: 'deepseek-flash',
+          name: 'DeepSeek-V4.1-Flash',
+          provider: 'deepseek-account',
+          providerName: 'DEEPSEEK 账号',
+          badge: '1017',
+          defaultEffort: 'high'
+        },
+        {
+          id: 'deepseek-v4-pro',
+          name: 'DeepSeek-V4-Pro',
+          provider: 'deepseek-account',
+          providerName: 'DEEPSEEK 账号',
+          badge: null,
+          defaultEffort: 'high'
+        }
+      ];
+
+      var EFFORTS = [
+        { id: 'off', name: 'Off' },
+        { id: 'low', name: 'Low' },
+        { id: 'high', name: 'High' },
+        { id: 'max', name: 'Max' }
+      ];
+
+      var STARS = [
+        [7, 28, 1.4, 0.72, 5.2, 0.3],
+        [12, 62, 1.2, 0.54, 6.1, 1.4],
+        [18, 43, 1.8, 0.8, 4.7, 2.2],
+        [24, 20, 1.1, 0.45, 5.8, 0.8],
+        [30, 70, 1.3, 0.68, 6.4, 2.8],
+        [36, 35, 1.7, 0.86, 4.9, 1.1],
+        [42, 57, 1.2, 0.5, 6.7, 3.1],
+        [48, 25, 1.4, 0.74, 5.5, 1.8],
+        [54, 66, 1.8, 0.88, 5.1, 0.5],
+        [60, 39, 1.1, 0.42, 6.9, 2.4],
+        [66, 58, 1.5, 0.66, 5.6, 3.3],
+        [72, 22, 1.3, 0.58, 6.2, 1.2],
+        [78, 49, 1.9, 0.84, 4.8, 2.6],
+        [84, 31, 1.2, 0.48, 6.6, 0.9],
+        [90, 63, 1.4, 0.62, 5.4, 2.0]
+      ];
+
+      var ui = {
+        open: false,
+        pane: 'menu',
+        dragPercent: null,
+        dragging: false,
+        optimistic: null,
+        busy: false,
+        pointer: null,
+        timer: null,
+        touched: false,
+        spin: 0
+      };
+
+      var state = {
+        provider: 'deepseek-account',
+        modelId: 'deepseek-flash',
+        effortId: 'max'
+      };
+
+      var host = document.getElementById('surfaceHost');
+      var trigger = document.getElementById('trigger');
+      var triggerModel = document.getElementById('triggerModel');
+      var triggerBadge = document.getElementById('triggerBadge');
+      var triggerLevel = document.getElementById('triggerLevel');
+      var triggerChev = document.getElementById('triggerChev');
+      var triggerSpinner = document.getElementById('triggerSpinner');
+      var statusText = document.getElementById('statusText');
+      var themeBtn = document.getElementById('themeBtn');
+      var surface = null;
+
+      function currentModel() {
+        return MODELS.find(function (model) { return model.id === state.modelId; }) || MODELS[0];
+      }
+
+      function shownEffort() {
+        var id = ui.optimistic || state.effortId;
+        return EFFORTS.find(function (effort) { return effort.id === id; }) || EFFORTS[0];
+      }
+
+      function effortIndex() {
+        var id = ui.optimistic || state.effortId;
+        var index = EFFORTS.findIndex(function (effort) { return effort.id === id; });
+        return index < 0 ? 0 : index;
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function indexToPercent(index, count) {
+        if (count <= 1) return 0;
+        return (Math.max(0, Math.min(count - 1, index)) / (count - 1)) * 100;
+      }
+
+      function percentToIndex(percent, count) {
+        if (count <= 1) return 0;
+        return Math.round((Math.max(0, Math.min(100, percent)) / 100) * (count - 1));
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function modelLabel(model) {
+        return '<span class="dsu-modelName">' + escapeHtml(model.name) + '</span>' +
+          (model.badge ? '<span class="dsu-modelBadge">' + escapeHtml(model.badge) + '</span>' : '');
+      }
+
+      function setStatus(text) {
+        statusText.textContent = text;
+      }
+
+      function chevronRight() {
+        return '<svg class="dsu-menuChev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 3 3 3-3 3"/></svg>';
+      }
+
+      function checkIcon() {
+        return '<svg class="dsu-checkSvg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3.5 8.4 2.8 2.8 6.2-6.2"/></svg>';
+      }
+
+      function resetIcon() {
+        return '<svg class="dsu-resetSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 1 0-2.4 5.7"/><path d="M20 4v7h-7"/></svg>';
+      }
+
+      function whaleSvg() {
+        return '<svg class="dsu-whale" viewBox="0 0 23.16 17.04" fill="currentColor" aria-hidden="true"><path d="' + WHALE_PATH + '"/></svg>';
+      }
+
+      function modelFromButton(button) {
+        return MODELS.find(function (model) { return model.id === button.getAttribute('data-model'); });
+      }
+
+      function currentEffortLabel() {
+        var effort = shownEffort();
+        return effort ? effort.name : 'Max';
+      }
+
+      function updateTrigger() {
+        var model = currentModel();
+        triggerModel.textContent = model.name;
+        triggerBadge.hidden = !model.badge;
+        triggerBadge.textContent = model.badge || '';
+        triggerLevel.textContent = currentEffortLabel();
+        triggerSpinner.hidden = !ui.busy;
+        triggerChev.hidden = ui.busy;
+        trigger.setAttribute('aria-expanded', ui.open ? 'true' : 'false');
+        if (ui.open) trigger.setAttribute('aria-controls', 'ultraSurface');
+        else trigger.removeAttribute('aria-controls');
+        trigger.setAttribute('aria-label',
+          '选择模型与推理等级，当前模型 ' + model.name + '，当前等级 ' + currentEffortLabel());
+        trigger.setAttribute('data-open', ui.open ? 'true' : 'false');
+      }
+
+      function updateCardLive() {
+        if (surface === null || ui.pane !== 'reasoning') return;
+        var track = surface.querySelector('.dsu-track');
+        if (track === null) return;
+        var index = shownEffort() ? EFFORTS.findIndex(function (effort) { return effort.id === shownEffort().id; }) : 0;
+        if (index < 0) index = 0;
+        var percent = ui.dragPercent !== null ? ui.dragPercent : indexToPercent(index, EFFORTS.length);
+        var active = ui.dragging && ui.dragPercent !== null ? percentToIndex(ui.dragPercent, EFFORTS.length) : index;
+        track.style.setProperty('--pct', percent + '%');
+        track.setAttribute('data-max', active === EFFORTS.length - 1 ? 'true' : 'false');
+        track.setAttribute('data-drag', ui.dragging ? 'true' : 'false');
+        track.setAttribute('aria-valuenow', String(active));
+        track.setAttribute('aria-valuetext', EFFORTS[active].name);
+        track.setAttribute('aria-disabled', ui.busy ? 'true' : 'false');
+        track.tabIndex = ui.busy ? -1 : 0;
+        var title = surface.querySelector('.dsu-title');
+        if (title) {
+          var atMax = EFFORTS[active].id === 'max';
+          title.textContent = atMax ? '鲸神' : '鲸鲸';
+          title.setAttribute('data-max', atMax ? 'true' : 'false');
+          surface.setAttribute('aria-label', atMax ? '鲸神推理强度' : '鲸鲸推理强度');
+        }
+        var labels = surface.querySelectorAll('.dsu-label');
+        for (var i = 0; i < labels.length; i += 1) {
+          labels[i].setAttribute('data-active', i === active ? 'true' : 'false');
+          labels[i].disabled = ui.busy;
+        }
+        var reset = surface.querySelector('.dsu-reset');
+        if (reset) reset.disabled = ui.busy;
+        var modelText = surface.querySelector('.dsu-modelText');
+        if (modelText) modelText.textContent = currentModel().name;
+      }
+
+      function placeSurface() {
+        if (surface === null) return;
+        var rect = trigger.getBoundingClientRect();
+        var width = surface.offsetWidth || (ui.pane === 'reasoning' ? 360 : 330);
+        var height = surface.offsetHeight || 58;
+        var margin = 12;
+        var left = ui.pane === 'reasoning'
+          ? rect.left + rect.width / 2 - width / 2
+          : rect.left;
+        left = clamp(left, margin, Math.max(margin, window.innerWidth - width - margin));
+        var top = rect.top - 8 - height;
+        if (top < margin) {
+          top = clamp(rect.bottom + 8, margin, Math.max(margin, window.innerHeight - height - margin));
+        }
+        surface.style.left = left + 'px';
+        surface.style.top = top + 'px';
+        surface.style.visibility = 'visible';
+        surface.setAttribute('data-ready', 'true');
+      }
+
+      function focusSurface() {
+        if (surface === null) return;
+        requestAnimationFrame(function () {
+          if (surface === null) return;
+          if (ui.pane === 'models') {
+            var selected = surface.querySelector('[aria-selected="true"]') || surface.querySelector('.dsu-modelOption');
+            (selected || surface).focus({ preventScroll: true });
+          } else if (ui.pane === 'reasoning') {
+            var track = surface.querySelector('.dsu-track');
+            (track || surface).focus({ preventScroll: true });
+          } else {
+            var first = surface.querySelector('[data-menu-row]');
+            (first || surface).focus({ preventScroll: true });
+          }
+        });
+      }
+
+      function removeSurface() {
+        ui.pointer = null;
+        ui.dragging = false;
+        ui.dragPercent = null;
+        if (surface !== null) {
+          surface.remove();
+          surface = null;
+        }
+      }
+
+      function menuHtml() {
+        var model = currentModel();
+        return '<div class="dsu-menuRoot" role="menu" aria-label="模型与推理等级">' +
+          '<button type="button" class="dsu-menuRow" role="menuitem" data-menu-row data-row="model">' +
+            '<span class="dsu-menuLabel">模型</span>' +
+            '<span class="dsu-menuValue">' + modelLabel(model) + '</span>' +
+            chevronRight() +
+          '</button>' +
+          '<button type="button" class="dsu-menuRow" role="menuitem" data-menu-row data-row="reasoning">' +
+            '<span class="dsu-menuLabel">推理等级</span>' +
+            '<span class="dsu-menuValue">' + escapeHtml(currentEffortLabel()) + '</span>' +
+            chevronRight() +
+          '</button>' +
+        '</div>';
+      }
+
+      function modelsHtml() {
+        var html = '<div class="dsu-pane">' +
+          '<div class="dsu-paneHead">' +
+            '<button type="button" class="dsu-back" data-action="back" aria-label="返回模型与推理等级">' +
+              '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 3-5 5 5 5"/></svg>' +
+            '</button>' +
+            '<span class="dsu-paneTitle">选择模型</span>' +
+            '<span aria-hidden="true"></span>' +
+          '</div>' +
+          '<div class="dsu-modelList" role="listbox" aria-label="选择模型">';
+        html += '<div class="dsu-modelGroup"><div class="dsu-modelGroupLabel">' + escapeHtml(MODELS[0].providerName) + '</div>';
+        MODELS.forEach(function (model) {
+          var selected = model.id === state.modelId;
+          html += '<button type="button" class="dsu-modelOption" role="option" data-model="' + escapeHtml(model.id) + '" aria-selected="' + (selected ? 'true' : 'false') + '" data-current="' + (selected ? 'true' : 'false') + '">' +
+            '<span class="dsu-modelOptionName">' + modelLabel(model) + '</span>' +
+            (selected ? '<span class="dsu-check" aria-hidden="true">' + checkIcon() + '</span>' : '<span></span>') +
+          '</button>';
+        });
+        html += '</div></div>';
+        return html;
+      }
+
+      function starsHtml() {
+        return STARS.map(function (star) {
+          var style = 'left:' + star[0] + '%;top:' + star[1] + '%;width:' + star[2] + 'px;height:' + star[2] + 'px;opacity:' + star[3] + ';--dur:' + star[4] + 's;--delay:' + star[5] + 's;';
+          return '<span class="dsu-star" style="' + style + '"></span>';
+        }).join('');
+      }
+
+      function cardHtml() {
+        var model = currentModel();
+        var index = effortIndex();
+        var percent = indexToPercent(index, EFFORTS.length);
+        var atMax = EFFORTS[index].id === 'max';
+        var labels = EFFORTS.map(function (effort, i) {
+          return '<button type="button" class="dsu-label" tabindex="-1" data-effort="' + effort.id + '"' +
+            (i === index ? ' data-active="true"' : '') +
+            ' style="left:' + indexToPercent(i, EFFORTS.length) + '%;transform:translateX(-50%)" ' +
+            'aria-label="选择推理等级 ' + escapeHtml(effort.name) + '">' + escapeHtml(effort.name) + '</button>';
+        }).join('');
+        return '<div class="dsu-head">' +
+            '<span class="dsu-whaleAvatar" aria-hidden="true">' + whaleSvg() + '</span>' +
+            '<span class="dsu-title" data-max="' + (atMax ? 'true' : 'false') + '">' + (atMax ? '鲸神' : '鲸鲸') + '</span>' +
+            '<button type="button" class="dsu-reset" title="重置为模型默认等级" aria-label="重置为模型默认等级">' +
+              '<span class="dsu-resetIcon">' + resetIcon() + '</span>' +
+            '</button>' +
+          '</div>' +
+          '<div class="dsu-main">' +
+            '<div class="dsu-modelRow"><span class="dsu-modelText" title="' + escapeHtml(model.name) + '">' + escapeHtml(model.name) + '</span></div>' +
+            '<div class="dsu-slider">' +
+              '<div class="dsu-track" role="slider" tabindex="0" aria-label="鲸鲸推理强度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="' + index + '" aria-valuetext="' + escapeHtml(EFFORTS[index].name) + '" data-max="' + (index === EFFORTS.length - 1 ? 'true' : 'false') + '" style="--pct:' + percent + '%">' +
+                '<div class="dsu-range">' +
+                  '<div class="dsu-fill" aria-hidden="true">' +
+                    '<span class="dsu-fillAurora"></span>' +
+                    '<span class="dsu-fillSheen"></span>' +
+                    '<span class="dsu-stars">' + starsHtml() + '</span>' +
+                    '<span class="dsu-warp"><span class="dsu-warpLine"></span><span class="dsu-warpLine"></span></span>' +
+                  '</div>' +
+                  '<span class="dsu-thumb" aria-hidden="true"></span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="dsu-labels">' + labels + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dsu-error" role="alert" hidden></div>';
+      }
+
+      function buildSurface() {
+        removeSurface();
+        var element = document.createElement('div');
+        element.id = 'ultraSurface';
+        if (ui.pane === 'reasoning') {
+          element.className = 'dsu-card';
+          element.setAttribute('role', 'dialog');
+          element.setAttribute('aria-label', '鲸鲸推理强度');
+          element.innerHTML = cardHtml();
+        } else {
+          element.className = 'dsu-menu';
+          element.setAttribute('role', 'dialog');
+          element.setAttribute('aria-label', ui.pane === 'models' ? '选择模型' : '模型与推理等级');
+          element.innerHTML = ui.pane === 'models' ? modelsHtml() : menuHtml();
+        }
+        element.tabIndex = -1;
+        element.style.left = '0px';
+        element.style.top = '0px';
+        element.style.visibility = 'hidden';
+        host.appendChild(element);
+        surface = element;
+
+        if (ui.pane === 'menu') {
+          element.querySelector('[data-row="model"]').addEventListener('click', function () {
+            if (ui.busy) return;
+            ui.pane = 'models';
+            buildSurface();
+            setStatus('选择模型，推理等级会随模型默认值更新');
+          });
+          element.querySelector('[data-row="reasoning"]').addEventListener('click', function () {
+            if (ui.busy) return;
+            ui.pane = 'reasoning';
+            buildSurface();
+            setStatus('拖动或点击蓝色推理条，选择思考深度');
+          });
+        } else if (ui.pane === 'models') {
+          element.querySelector('[data-action="back"]').addEventListener('click', function () {
+            if (ui.busy) return;
+            ui.pane = 'menu';
+            buildSurface();
+            setStatus('选择一个项目');
+          });
+          var options = element.querySelectorAll('.dsu-modelOption');
+          for (var i = 0; i < options.length; i += 1) {
+            options[i].addEventListener('click', function (event) {
+              if (ui.busy) return;
+              var model = modelFromButton(event.currentTarget);
+              if (model) chooseModel(model);
+            });
+          }
+        } else {
+          bindCard(element);
+        }
+
+        requestAnimationFrame(function () {
+          if (surface !== element) return;
+          placeSurface();
+          focusSurface();
+        });
+      }
+
+      function bindCard(element) {
+        var track = element.querySelector('.dsu-track');
+        var reset = element.querySelector('.dsu-reset');
+        var labels = element.querySelectorAll('.dsu-label');
+
+        reset.addEventListener('click', resetLevel);
+
+        track.addEventListener('pointerdown', function (event) {
+          if (ui.busy || event.button !== 0 || ui.pointer !== null) return;
+          event.preventDefault();
+          ui.pointer = event.pointerId;
+          try { track.setPointerCapture(event.pointerId); } catch (error) { /* ignore */ }
+          ui.dragging = true;
+          ui.dragPercent = percentFromClientX(event.clientX);
+          track.focus({ preventScroll: true });
+          updateCardLive();
+        });
+        track.addEventListener('pointermove', function (event) {
+          if (ui.pointer !== event.pointerId) return;
+          ui.dragPercent = percentFromClientX(event.clientX);
+          updateCardLive();
+        });
+        track.addEventListener('pointerup', function (event) {
+          if (ui.pointer !== event.pointerId) return;
+          var percent = percentFromClientX(event.clientX);
+          ui.pointer = null;
+          ui.dragging = false;
+          ui.dragPercent = null;
+          try { track.releasePointerCapture(event.pointerId); } catch (error) { /* ignore */ }
+          updateCardLive();
+          applyEffort(EFFORTS[percentToIndex(percent, EFFORTS.length)].id);
+        });
+        track.addEventListener('pointercancel', function (event) {
+          if (ui.pointer !== event.pointerId) return;
+          ui.pointer = null;
+          ui.dragging = false;
+          ui.dragPercent = null;
+          updateCardLive();
+        });
+        track.addEventListener('lostpointercapture', function (event) {
+          if (ui.pointer !== event.pointerId) return;
+          ui.pointer = null;
+          ui.dragging = false;
+          ui.dragPercent = null;
+          updateCardLive();
+        });
+        track.addEventListener('keydown', function (event) {
+          if (ui.busy) return;
+          var index = effortIndex();
+          if (event.key === 'ArrowRight' || event.key === 'ArrowUp') index += 1;
+          else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') index -= 1;
+          else if (event.key === 'Home') index = 0;
+          else if (event.key === 'End') index = EFFORTS.length - 1;
+          else return;
+          event.preventDefault();
+          index = clamp(index, 0, EFFORTS.length - 1);
+          applyEffort(EFFORTS[index].id);
+        });
+
+        for (var i = 0; i < labels.length; i += 1) {
+          labels[i].addEventListener('click', function (event) {
+            if (ui.busy) return;
+            track.focus({ preventScroll: true });
+            applyEffort(event.currentTarget.getAttribute('data-effort'));
+          });
+        }
+      }
+
+      function percentFromClientX(clientX) {
+        var track = surface && surface.querySelector('.dsu-track');
+        if (!track) return 0;
+        var rect = track.getBoundingClientRect();
+        var usable = rect.width - 48;
+        if (usable <= 0) return 0;
+        return clamp(((clientX - (rect.left + 24)) / usable) * 100, 0, 100);
+      }
+
+      function updateAll() {
+        updateTrigger();
+        updateCardLive();
+      }
+
+      function openSurface() {
+        if (ui.open) return;
+        ui.open = true;
+        ui.pane = 'menu';
+        buildSurface();
+        updateAll();
+        setStatus('选择一个项目');
+      }
+
+      function closeSurface(restoreFocus) {
+        ui.open = false;
+        ui.pane = 'menu';
+        ui.dragging = false;
+        ui.dragPercent = null;
+        removeSurface();
+        updateTrigger();
+        setStatus('点击模型栏，打开两级选择');
+        if (restoreFocus) trigger.focus({ preventScroll: true });
+      }
+
+      function applyEffort(id) {
+        if (ui.busy) return;
+        if (!EFFORTS.some(function (effort) { return effort.id === id; })) return;
+        var effort = EFFORTS.find(function (item) { return item.id === id; });
+        if (id === state.effortId && ui.optimistic === null) {
+          updateAll();
+          setStatus('当前已是 ' + effort.name + ' 推理等级');
+          return;
+        }
+        ui.busy = true;
+        ui.optimistic = id;
+        ui.dragPercent = null;
+        ui.dragging = false;
+        updateAll();
+        setStatus('正在切换推理等级…');
+        clearTimeout(ui.timer);
+        ui.timer = setTimeout(function () {
+          state.effortId = id;
+          ui.busy = false;
+          ui.optimistic = null;
+          updateAll();
+          setStatus('推理等级已切换为 ' + effort.name + '，界面位置保持不变');
+        }, 480);
+      }
+
+      function resetLevel() {
+        if (ui.busy) return;
+        var icon = surface && surface.querySelector('.dsu-resetIcon');
+        if (icon) {
+          icon.removeAttribute('data-spin');
+          void icon.offsetWidth;
+          icon.setAttribute('data-spin', 'true');
+          setTimeout(function () {
+            if (icon) icon.removeAttribute('data-spin');
+          }, 620);
+        }
+        var model = currentModel();
+        ui.optimistic = model.defaultEffort;
+        applyEffort(model.defaultEffort);
+      }
+
+      function chooseModel(model) {
+        if (ui.busy) return;
+        if (model.id === state.modelId) {
+          closeSurface(true);
+          setStatus('已选择 ' + model.name);
+          return;
+        }
+        ui.busy = true;
+        updateTrigger();
+        setStatus('正在切换到 ' + model.name + '…');
+        clearTimeout(ui.timer);
+        ui.timer = setTimeout(function () {
+          state.modelId = model.id;
+          state.effortId = model.defaultEffort;
+          ui.busy = false;
+          ui.optimistic = null;
+          updateTrigger();
+          closeSurface(true);
+          setStatus('模型已切换为 ' + model.name + '，推理等级回到 ' + currentEffortLabel());
+        }, 520);
+      }
+
+      trigger.addEventListener('click', function () {
+        ui.touched = true;
+        if (ui.open) {
+          closeSurface(true);
+        } else {
+          openSurface();
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (!ui.open) return;
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (ui.pane === 'models') {
+          ui.pane = 'menu';
+          buildSurface();
+          setStatus('选择一个项目');
+        } else {
+          closeSurface(true);
+        }
+      });
+
+      document.addEventListener('mousedown', function (event) {
+        if (!ui.open) return;
+        if (trigger.contains(event.target)) return;
+        if (surface && surface.contains(event.target)) return;
+        closeSurface(false);
+      });
+
+      window.addEventListener('resize', function () {
+        if (ui.open && surface) placeSurface();
+      });
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? '切换为浅色主题' : '切换为深色主题');
+        try { localStorage.setItem('dsh-whale-theme', theme); } catch (error) { /* ignore */ }
+      }
+
+      themeBtn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+      });
+
+      try {
+        var savedTheme = localStorage.getItem('dsh-whale-theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') applyTheme(savedTheme);
+      } catch (error) { /* ignore */ }
+
+      updateAll();
+    })();
+  </script>
+</body>
+</html>
