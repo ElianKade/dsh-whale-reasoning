@@ -25,18 +25,19 @@
 
 ## 安装
 
-> 推荐先使用 DSH Desktop 的插件管理界面安装本地文件夹；如果界面没有该入口，再使用下面的 CLI。
+要求 DSH Desktop 2.0.x / `@deepseek-ai/dsh` 0.2.x。安装完成后必须**完全退出 DSH Desktop**（包括托盘和后台进程），再重新打开。
 
-### 方式一：DSH 插件管理界面
+### 方式一：从 GitHub 安装
 
-1. 下载或克隆本仓库到本地文件夹。
-2. 打开 **DSH Desktop → 设置 → 插件**，选择从本地文件夹安装 / 安装本地插件。
-3. 选择本仓库根目录（包含 `package.json` 的目录）。
-4. **完全退出 DSH Desktop**（包括托盘和后台进程），再重新打开。
+仓库地址：<https://github.com/ElianKade/dsh-whale-reasoning>（当前为私有仓库，需要先获得访问权限）。
 
-### 方式二：CLI
+```powershell
+dsh plugin --profile desktop add "github:ElianKade/dsh-whale-reasoning"
+```
 
-在仓库根目录执行：
+### 方式二：从本地文件夹安装
+
+先下载或克隆本仓库到本地文件夹，在仓库根目录执行：
 
 ```powershell
 dsh plugin --profile desktop add "file:D:/path/to/dsh-whale-reasoning"
@@ -57,16 +58,6 @@ dsh plugin --profile desktop add "file:D:/path/to/dsh-whale-reasoning"
 文件位置：`C:\Users\<你>\.dsh\profiles\desktop\package.json`。
 
 最后完全退出并重新打开 DSH Desktop。
-
-### 方式三：从 GitHub 安装
-
-仓库地址：<https://github.com/ElianKade/dsh-whale-reasoning>（当前为私有仓库，需要先获得访问权限）。
-
-```powershell
-dsh plugin --profile desktop add "github:ElianKade/dsh-whale-reasoning"
-```
-
-安装完成后同样需要完全退出并重新打开 DSH Desktop。
 
 ### 为什么不需要改绝对路径
 
